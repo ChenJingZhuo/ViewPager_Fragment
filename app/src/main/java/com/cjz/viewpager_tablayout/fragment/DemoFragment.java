@@ -62,7 +62,6 @@ public class DemoFragment extends Fragment {
             TabLayout.Tab tabAt = tabLayout.getTabAt(i);
             if (tabAt!=null){
                 tabAt.setCustomView(R.layout.main_tab_item);
-                //TabLayout 去掉点击效果（水波效果）
             }
         }
         View customView = tabLayout.getTabAt(0).getCustomView();
@@ -119,6 +118,7 @@ public class DemoFragment extends Fragment {
         if (isVisibleToUser){
             //若主标签为3个及以上，直接点击最后一项，会报错。java.lang.IllegalStateException: Fragment DemoFragment ... has not been attached yet.
             //因为那个标签页没有初始化，这时候不能在setUserVisibleHint操作UI，要在onResume回调方法里操作才行。
+            //因为setUserVisibleHint是早于onCreateView之前执行的，所以会报空指针
             if (viewPager!=null&&tabLayout!=null){
                 getData();
             } else {
@@ -133,6 +133,15 @@ public class DemoFragment extends Fragment {
         super.onResume();
         if (isNotInit){
             getData();
+        }
+    }
+
+    //onHiddenChanged在显示或者隐藏的时候都会被调用
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden){
+
         }
     }
 }
